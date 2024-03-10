@@ -16,6 +16,14 @@ import ECommerce from './pages/Dashboard/ECommerce';
 // import Buttons from './pages/UiElements/Buttons';
 import Customer from './pages/Customer';
 import CustomerCreate from './pages/CustomerCreate';
+import Car from './pages/Car';
+import CarCreate from './pages/CarCreate';
+import Carwash from './pages/Carwash';
+import CarwashCreate from './pages/CarwashrCreate';
+import Consultancy from './pages/Consultancy';
+import MessageCreate from './pages/MessageCreate';
+import Message from './pages/Message';
+import ConsultancyCreate from './pages/ConsultancyCreate';
 import FormElements from './pages/Form/FormElements';
 
 function App() {
@@ -59,6 +67,85 @@ function App() {
             <>
               <PageTitle title="Create New Customer" />
               <CustomerCreate />
+            </>
+          }
+        />
+             <Route
+          path="/car"
+          element={
+            <>
+              <PageTitle title="Car List" />
+              <Car />
+            </>
+          }
+        />
+
+      <Route
+          path="/car/create"
+          element={
+            <>
+              <PageTitle title="Create Car" />
+              <CarCreate />
+            </>
+          }
+        />
+
+    <Route
+          path="/carwash"
+          element={
+            <>
+              <PageTitle title="Car Wash List" />
+              <Carwash />
+            </>
+          }
+        />
+
+      <Route
+          path="/carwash/create"
+          element={
+            <>
+              <PageTitle title="Create Car Wash" />
+              <CarwashCreate />
+            </>
+          }
+        />
+
+      <Route
+          path="/consultancy"
+          element={
+            <>
+              <PageTitle title=" Consultancy List" />
+              <Consultancy />
+            </>
+          }
+        />
+
+      <Route
+          path="/consultancy/create"
+          element={
+            <>
+              <PageTitle title="Create Consultancy" />
+              <ConsultancyCreate />
+            </>
+          }
+        />
+
+<Route
+          path="/message"
+          element={
+            <>
+              <PageTitle title=" Message List" />
+              <Message />
+            </>
+          }
+        />
+
+      <Route
+          path="/message/create"
+          element={
+            <>
+              <PageTitle title="Create Message" />
+              <MessageCreate />
             </>
           }
         />
