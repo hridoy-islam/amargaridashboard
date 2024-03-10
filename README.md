@@ -1,7 +1,7 @@
 # Amar Gari Admin Dashboard Project
 
 User -> CRUD
-ADS -> CURD, 30 MSG
+Car -> CURD, 30 MSG
 Inbox -> Chat DB -> adsid, adminid , userid, message [{}, {timestamp 0002, 'Hello Sir how can I help you'}]
 Wash -> Bookings, CRUD ( Filter, Paginate )
 Consultancy -> CRUD ( Filter, Paginate )
