@@ -80,8 +80,10 @@ const DropdownUser = () => {
           dropdownOpen === true ? 'block' : 'hidden'
         }`}
       >
-      
-        <button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+        <Link
+          to="/"
+          className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+        >
           <svg
             className="fill-current"
             width="22"
@@ -100,7 +102,7 @@ const DropdownUser = () => {
             />
           </svg>
           Log Out
-        </button>
+        </Link>
       </div>
       {/* <!-- Dropdown End --> */}
     </div>
