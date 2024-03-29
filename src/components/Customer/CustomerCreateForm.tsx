@@ -1,18 +1,39 @@
-import CheckboxFive from '../Checkboxes/CheckboxFive';
-import CheckboxFour from '../Checkboxes/CheckboxFour';
-import CheckboxOne from '../Checkboxes/CheckboxOne';
-import CheckboxThree from '../Checkboxes/CheckboxThree';
-import CheckboxTwo from '../Checkboxes/CheckboxTwo';
-import DatePickerOne from '../Forms/DatePicker/DatePickerOne';
-import DatePickerTwo from '../Forms/DatePicker/DatePickerTwo';
-import MultiSelect from '../Forms/MultiSelect';
-import SelectGroupTwo from '../Forms/SelectGroup/SelectGroupTwo';
-import SwitcherFour from '../Switchers/SwitcherFour';
-import SwitcherOne from '../Switchers/SwitcherOne';
-import SwitcherThree from '../Switchers/SwitcherThree';
-import SwitcherTwo from '../Switchers/SwitcherTwo';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import axiosInsance from '../../axios';
+import { useNavigate } from 'react-router-dom';
 
+type Inputs = {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+};
 const CustomerCreateForm = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
+
+  const navigate = useNavigate();
+
+  const postData = async (formData) => {
+    await axiosInsance
+      .post('/auth/signup', formData)
+      .then(function (response) {
+        toast.success(response.data.message);
+        navigate('/dashboard/customer');
+      })
+      .catch(function (error) {
+        toast.error(error.response.data.message);
+      });
+  };
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    postData(data);
+  };
+
   return (
     <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
       <div className="flex flex-col gap-9">
@@ -20,177 +41,73 @@ const CustomerCreateForm = () => {
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
             <h3 className="font-medium text-black dark:text-white">
-              Input Fields
+              Insert Customer Details
             </h3>
           </div>
-          <div className="flex flex-col gap-5.5 p-6.5">
-            <div>
-              <label className="mb-3 block text-black dark:text-white">
-                Default Input
-              </label>
-              <input
-                type="text"
-                placeholder="Default Input"
-                className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-              />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex flex-col gap-5.5 p-6.5">
+              <div>
+                <label className="mb-3 block text-black dark:text-white">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  {...register('name', { required: true })}
+                  placeholder="Name"
+                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                />
+                {errors.name && <span>Name is required</span>}
+              </div>
+              <div>
+                <label className="mb-3 block text-black dark:text-white">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  {...register('email', { required: true })}
+                  placeholder="Email"
+                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                />
+                {errors.email && <span>Email is required</span>}
+              </div>
+              <div>
+                <label className="mb-3 block text-black dark:text-white">
+                  Phone
+                </label>
+                <input
+                  type="text"
+                  {...register('phone', {
+                    required: true,
+                    maxLength: 11,
+                    minLength: 11,
+                  })}
+                  placeholder="Phone"
+                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                />
+                {errors.phone && (
+                  <span>Please insert correct phone number</span>
+                )}
+              </div>
+              <div>
+                <label className="mb-3 block text-black dark:text-white">
+                  Password
+                </label>
+                <input
+                  type="text"
+                  placeholder="Password"
+                  {...register('password', { required: true, minLength: 4 })}
+                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                />
+                {errors.password && <span>Password minimum 4 characters</span>}
+              </div>
+              <div>
+                <input
+                  type="submit"
+                  className="rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black cursor-pointer"
+                />
+              </div>
             </div>
-
-            <div>
-              <label className="mb-3 block text-black dark:text-white">
-                Active Input
-              </label>
-              <input
-                type="text"
-                placeholder="Active Input"
-                className="w-full rounded-lg border-[1.5px] border-primary bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white"
-              />
-            </div>
-
-            <div>
-              <label className="mb-3 block font-medium text-black dark:text-white">
-                Disabled label
-              </label>
-              <input
-                type="text"
-                placeholder="Disabled label"
-                disabled
-                className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary dark:disabled:bg-black"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* <!-- Toggle switch input --> */}
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-          <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-            <h3 className="font-medium text-black dark:text-white">
-              Toggle switch input
-            </h3>
-          </div>
-          <div className="flex flex-col gap-5.5 p-6.5">
-            <SwitcherOne />
-            <SwitcherTwo />
-            <SwitcherThree />
-            <SwitcherFour />
-          </div>
-        </div>
-
-        {/* <!-- Time and date --> */}
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-          <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-            <h3 className="font-medium text-black dark:text-white">
-              Time and date
-            </h3>
-          </div>
-          <div className="flex flex-col gap-5.5 p-6.5">
-            <DatePickerOne />
-            <DatePickerTwo />
-          </div>
-        </div>
-
-        {/* <!-- File upload --> */}
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-          <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-            <h3 className="font-medium text-black dark:text-white">
-              File upload
-            </h3>
-          </div>
-          <div className="flex flex-col gap-5.5 p-6.5">
-            <div>
-              <label className="mb-3 block text-black dark:text-white">
-                Attach file
-              </label>
-              <input
-                type="file"
-                className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
-              />
-            </div>
-
-            <div>
-              <label className="mb-3 block text-black dark:text-white">
-                Attach file
-              </label>
-              <input
-                type="file"
-                className="w-full rounded-md border border-stroke p-3 outline-none transition file:mr-4 file:rounded file:border-[0.5px] file:border-stroke file:bg-[#EEEEEE] file:py-1 file:px-2.5 file:text-sm focus:border-primary file:focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-strokedark dark:file:bg-white/30 dark:file:text-white"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-9">
-        {/* <!-- Textarea Fields --> */}
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-          <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-            <h3 className="font-medium text-black dark:text-white">
-              Textarea Fields
-            </h3>
-          </div>
-          <div className="flex flex-col gap-5.5 p-6.5">
-            <div>
-              <label className="mb-3 block text-black dark:text-white">
-                Default textarea
-              </label>
-              <textarea
-                rows={6}
-                placeholder="Default textarea"
-                className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-              ></textarea>
-            </div>
-
-            <div>
-              <label className="mb-3 block text-black dark:text-white">
-                Active textarea
-              </label>
-              <textarea
-                rows={6}
-                placeholder="Active textarea"
-                className="w-full rounded-lg border-[1.5px] border-primary bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:bg-form-input dark:text-white"
-              ></textarea>
-            </div>
-
-            <div>
-              <label className="mb-3 block text-black dark:text-white">
-                Disabled textarea
-              </label>
-              <textarea
-                rows={6}
-                disabled
-                placeholder="Disabled textarea"
-                className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary dark:disabled:bg-black"
-              ></textarea>
-            </div>
-          </div>
-        </div>
-
-        {/* <!-- Checkbox and radio --> */}
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-          <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-            <h3 className="font-medium text-black dark:text-white">
-              Checkbox and radio
-            </h3>
-          </div>
-          <div className="flex flex-col gap-5.5 p-6.5">
-            <CheckboxOne />
-            <CheckboxTwo />
-            <CheckboxThree />
-            <CheckboxFour />
-            <CheckboxFive />
-          </div>
-        </div>
-
-        {/* <!-- Select input --> */}
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-          <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-            <h3 className="font-medium text-black dark:text-white">
-              Select input
-            </h3>
-          </div>
-          <div className="flex flex-col gap-5.5 p-6.5">
-            <SelectGroupTwo />
-            <MultiSelect id="multiSelect" />
-          </div>
+          </form>
         </div>
       </div>
     </div>

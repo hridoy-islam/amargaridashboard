@@ -1,33 +1,19 @@
-import { Customer } from '../../types/Customer';
-
-const customerData: Customer[] = [
-  {
-    name: 'Ridoy Islam',
-    email: 'rudiy@gmail.copm',
-    phone: '012144777777',
-    status: 'active',
-  },
-  {
-    name: 'Ridoy Islam',
-    email: 'rudiy@gmail.copm',
-    phone: '012144777777',
-    status: 'pending',
-  },
-  {
-    name: 'Ridoy Islam',
-    email: 'rudiy@gmail.copm',
-    phone: '012144777777',
-    status: 'blocked',
-  },
-  {
-    name: 'Ridoy Islam',
-    email: 'rudiy@gmail.copm',
-    phone: '012144777777',
-    status: 'active',
-  },
-];
+import { useEffect, useState } from 'react';
+import axiosInstance from '../../axios';
 
 const CustomerList = () => {
+  const [customer, setCustomer] = useState([]);
+
+  const fetchData = async () => {
+    const response = await axiosInstance.get(`/users?role=user`);
+    setCustomer(response.data.data.result);
+    console.log(customer);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
@@ -48,27 +34,21 @@ const CustomerList = () => {
         </div>
       </div>
 
-      {customerData.map((customer, key) => (
+      {customer.map((item, key) => (
         <div
           className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
           key={key}
         >
           <div className="col-span-3 flex items-center">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-              <p className="text-sm text-black dark:text-white">
-                {customer.name}
-              </p>
+              <p className="text-sm text-black dark:text-white">{item.name}</p>
             </div>
           </div>
           <div className="col-span-2 hidden items-center sm:flex">
-            <p className="text-sm text-black dark:text-white">
-              {customer.email}
-            </p>
+            <p className="text-sm text-black dark:text-white">{item.email}</p>
           </div>
           <div className="col-span-1 flex items-center">
-            <p className="text-sm text-black dark:text-white">
-              {customer.phone}
-            </p>
+            <p className="text-sm text-black dark:text-white">{item.phone}</p>
           </div>
           <div className="col-span-1 flex items-center">
             <p
@@ -82,7 +62,7 @@ const CustomerList = () => {
                   : 'text-black'
               }`}
             >
-              {customer.status}
+              {item.status}
             </p>
           </div>
           <div className="col-span-1 flex items-center space-x-2">

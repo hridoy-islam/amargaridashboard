@@ -10,12 +10,12 @@ import Car from './pages/Car';
 import CarCreate from './pages/CarCreate';
 import Carwash from './pages/Carwash';
 import CarwashCreate from './pages/CarwashrCreate';
-import Consultancy from './pages/Consultancy';
-import MessageCreate from './pages/MessageCreate';
-import Message from './pages/Message';
-import ConsultancyCreate from './pages/ConsultancyCreate';
 import FormElements from './pages/Form/FormElements';
 import SignIn from './pages/Authentication/SignIn';
+import DriverCreateForm from './components/Driver/DriverCreate';
+import DriverList from './components/Driver/DriverList';
+import DriverCreate from './pages/DriverCreate';
+import Driver from './pages/Driver';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -38,7 +38,7 @@ function App() {
           path="/"
           element={
             <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Garir Mela Admin" />
               <SignIn />
             </>
           }
@@ -111,41 +111,21 @@ function App() {
         />
 
         <Route
-          path="dashboard/consultancy"
+          path="dashboard/driver"
           element={
             <>
-              <PageTitle title=" Consultancy List" />
-              <Consultancy />
+              <PageTitle title=" Driver List" />
+              <Driver />
             </>
           }
         />
 
         <Route
-          path="dashboard/consultancy/create"
+          path="dashboard/driver/create"
           element={
             <>
-              <PageTitle title="Create Consultancy" />
-              <ConsultancyCreate />
-            </>
-          }
-        />
-
-        <Route
-          path="dashboard/message"
-          element={
-            <>
-              <PageTitle title=" Message List" />
-              <Message />
-            </>
-          }
-        />
-
-        <Route
-          path="dashboard/message/create"
-          element={
-            <>
-              <PageTitle title="Create Message" />
-              <MessageCreate />
+              <PageTitle title="Create Driver" />
+              <DriverCreate />
             </>
           }
         />

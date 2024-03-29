@@ -1,14 +1,14 @@
 import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
-import MessageList from '../components/Message/MessageList';
+import DriverList from '../components/Driver/DriverList';
 import DefaultLayout from '../layout/DefaultLayout';
 
-const Message = () => {
+const Driver = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Message" />
-      <MessageList />
+      <Breadcrumb pageName="Driver" />
+      <DriverList />
     </DefaultLayout>
   );
 };
 
-export default Message;
+export default Driver;
