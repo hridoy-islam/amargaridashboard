@@ -1,21 +1,52 @@
 import { useEffect, useState } from 'react';
 import axiosInstance from '../../axios';
+import Pagination from '../Pagination/Pagination';
+import { SearchFilter } from '../SearchFilter/SearchFilter';
 
 const CustomerList = () => {
   const [customer, setCustomer] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
 
-  const fetchData = async () => {
-    const response = await axiosInstance.get(`/users?role=user`);
-    setCustomer(response.data.data.result);
-    console.log(customer);
+  const fetchData = async (page, entriesPerPage, searchTerm = '') => {
+    try {
+      let url = `/users?role=user&page=${page}&limit=${entriesPerPage}`;
+      // Check if searchTerm is not empty before adding to the URL
+      if (searchTerm.trim() !== '') {
+        url += `&searchTerm=${searchTerm}`;
+      }
+
+      const response = await axiosInstance.get(url);
+      setCustomer(response.data.data.result);
+      setTotalPages(response.data.data.meta.totalPage);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(currentPage, entriesPerPage, searchTerm);
+  }, [currentPage, entriesPerPage, searchTerm]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const handleEntriesPerPageChange = (event) => {
+    setEntriesPerPage(event.target.value);
+  };
 
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      <SearchFilter
+        onSearch={handleSearch}
+        onEntriesPerPageChange={handleEntriesPerPageChange}
+      />
       <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
         <div className="col-span-3 flex items-center">
           <p className="font-medium">Name</p>
@@ -71,6 +102,12 @@ const CustomerList = () => {
           </div>
         </div>
       ))}
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };
