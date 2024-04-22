@@ -6,6 +6,7 @@ import PageTitle from './components/PageTitle';
 import ECommerce from './pages/Dashboard/ECommerce';
 import Customer from './pages/Customer';
 import CustomerCreate from './pages/CustomerCreate';
+import CustomerEdit from './pages/CustomerEdit';
 import Car from './pages/Car';
 import CarCreate from './pages/CarCreate';
 import Carwash from './pages/Carwash';
@@ -16,6 +17,7 @@ import DriverCreateForm from './components/Driver/DriverCreate';
 import DriverList from './components/Driver/DriverList';
 import DriverCreate from './pages/DriverCreate';
 import Driver from './pages/Driver';
+import { DriverView } from './pages/DriverView';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -67,6 +69,15 @@ function App() {
             <>
               <PageTitle title="Create New Customer" />
               <CustomerCreate />
+            </>
+          }
+        />
+        <Route
+          path="dashboard/customer/:id"
+          element={
+            <>
+              <PageTitle title="Edit Customer Details" />
+              <CustomerEdit />
             </>
           }
         />
@@ -126,6 +137,15 @@ function App() {
             <>
               <PageTitle title="Create Driver" />
               <DriverCreate />
+            </>
+          }
+        />
+        <Route
+          path="dashboard/driver/:id"
+          element={
+            <>
+              <PageTitle title="Driver Details" />
+              <DriverView />
             </>
           }
         />

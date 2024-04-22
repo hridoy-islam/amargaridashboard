@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axiosInstance from '../../axios';
 import Pagination from '../Pagination/Pagination';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
+import { Link } from 'react-router-dom';
 
 const CustomerList = () => {
   const [customer, setCustomer] = useState([]);
@@ -84,11 +85,11 @@ const CustomerList = () => {
           <div className="col-span-1 flex items-center">
             <p
               className={`text-sm dark:text-white ${
-                customer.status == 'active'
+                item.status == 'active'
                   ? 'text-green-600'
-                  : customer.status == 'pending'
+                  : item.status == 'pending'
                   ? 'text-red-500'
-                  : customer.status == 'blocked'
+                  : item.status == 'blocked'
                   ? 'text-blue-500'
                   : 'text-black'
               }`}
@@ -97,7 +98,9 @@ const CustomerList = () => {
             </p>
           </div>
           <div className="col-span-1 flex items-center space-x-2">
-            <p className="text-sm text-meta-3">Edit</p>
+            <p className="text-sm text-meta-3">
+              <Link to={`/dashboard/customer/${item._id}`}>Edit</Link>
+            </p>
             <p className="text-sm text-meta-5">Delete</p>
           </div>
         </div>

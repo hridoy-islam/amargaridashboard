@@ -1,28 +1,33 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import axiosInsance from '../../axios';
+import axiosInstance from '../../axios.js';
 import { useNavigate } from 'react-router-dom';
 
 type Inputs = {
-  name: string;
+  createdAt: string;
   email: string;
+  isDeleted: boolean;
+  name: string;
   phone: string;
-  password: string;
+  role: string;
+  status: string;
+  updatedAt: string;
+  __v: string;
+  _id: string;
 };
-const CustomerCreateForm = () => {
+const CustomerEditForm = ({ defaultValues }) => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const navigate = useNavigate();
-
   const postData = async (formData) => {
-    await axiosInsance
-      .post('/auth/signup', formData)
+    await axiosInstance
+      .patch(`/users/${id}`, formData)
       .then(function (response) {
-        toast.success('customer added successfully');
+        toast.success('customer updated successfully');
         navigate('/dashboard/customer');
       })
       .catch(function (error) {
@@ -41,7 +46,7 @@ const CustomerCreateForm = () => {
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
             <h3 className="font-medium text-black dark:text-white">
-              Insert Customer Details
+              Edit Customer Details
             </h3>
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -93,7 +98,7 @@ const CustomerCreateForm = () => {
                   Password
                 </label>
                 <input
-                  type="text"
+                  type="password"
                   placeholder="Password"
                   {...register('password', { required: true, minLength: 4 })}
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
@@ -114,4 +119,4 @@ const CustomerCreateForm = () => {
   );
 };
 
-export default CustomerCreateForm;
+export default CustomerEditForm;

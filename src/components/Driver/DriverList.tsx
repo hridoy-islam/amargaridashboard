@@ -1,96 +1,118 @@
-import { Customer } from '../../types/Customer';
-
-const customerData: Customer[] = [
-  {
-    name: 'Ridoy Islam',
-    email: 'rudiy@gmail.copm',
-    phone: '012144777777',
-    status: 'active',
-  },
-  {
-    name: 'Ridoy Islam',
-    email: 'rudiy@gmail.copm',
-    phone: '012144777777',
-    status: 'pending',
-  },
-  {
-    name: 'Ridoy Islam',
-    email: 'rudiy@gmail.copm',
-    phone: '012144777777',
-    status: 'blocked',
-  },
-  {
-    name: 'Ridoy Islam',
-    email: 'rudiy@gmail.copm',
-    phone: '012144777777',
-    status: 'active',
-  },
-];
+import { useEffect, useState } from 'react';
+import axiosInstance from '../../axios';
+import { SearchFilter } from '../SearchFilter/SearchFilter';
+import Pagination from '../Pagination/Pagination';
+import { Link } from 'react-router-dom';
 
 const DriverList = () => {
+  const [driver, setDriver] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
+  const fetchData = async (page, entriesPerPage, searchTerm = '') => {
+    try {
+      let url = `/drivers?page=${page}&limit=${entriesPerPage}`;
+      // Check if searchTerm is not empty before adding to the URL
+      if (searchTerm.trim() !== '') {
+        url += `&searchTerm=${searchTerm}`;
+      }
+
+      const response = await axiosInstance.get(url);
+      setDriver(response.data.data.result);
+      setTotalPages(response.data.data.meta.totalPage);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  useEffect(() => {
+    fetchData(currentPage, entriesPerPage, searchTerm);
+  }, [currentPage, entriesPerPage, searchTerm]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const handleEntriesPerPageChange = (event) => {
+    setEntriesPerPage(event.target.value);
+  };
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      <SearchFilter
+        onSearch={handleSearch}
+        onEntriesPerPageChange={handleEntriesPerPageChange}
+      />
       <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
-        <div className="col-span-3 flex items-center">
+        <div className="col-span-2 flex items-center">
           <p className="font-medium">Name</p>
         </div>
-        <div className="col-span-2 hidden items-center sm:flex">
-          <p className="font-medium">Email</p>
-        </div>
-        <div className="col-span-1 flex items-center">
+        <div className="col-span-1 hidden items-center sm:flex">
           <p className="font-medium">Phone</p>
         </div>
-        <div className="col-span-1 flex items-center">
-          <p className="font-medium">Status</p>
+        <div className="col-span-1 hidden items-center sm:flex">
+          <p className="font-medium">Car</p>
         </div>
+        <div className="col-span-1 hidden items-center sm:flex">
+          <p className="font-medium">Division</p>
+        </div>
+        <div className="col-span-1 hidden items-center sm:flex">
+          <p className="font-medium">District</p>
+        </div>
+        <div className="col-span-1 hidden items-center sm:flex">
+          <p className="font-medium">Upazila</p>
+        </div>
+
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Actions</p>
         </div>
       </div>
 
-      {customerData.map((customer, key) => (
+      {driver.map((item, key) => (
         <div
           className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
           key={key}
         >
-          <div className="col-span-3 flex items-center">
+          <div className="col-span-2 flex items-center">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-              <p className="text-sm text-black dark:text-white">
-                {customer.name}
-              </p>
+              <p className="text-sm text-black dark:text-white">{item.name}</p>
             </div>
           </div>
-          <div className="col-span-2 hidden items-center sm:flex">
+          <div className="col-span-1 flex items-center">
+            <p className="text-sm text-black dark:text-white">{item.phone}</p>
+          </div>
+          <div className="col-span-1 flex items-center">
+            <p className="text-sm text-black dark:text-white">{item.car}</p>
+          </div>
+          <div className="col-span-1 flex items-center">
             <p className="text-sm text-black dark:text-white">
-              {customer.email}
+              {item.division}
             </p>
           </div>
           <div className="col-span-1 flex items-center">
             <p className="text-sm text-black dark:text-white">
-              {customer.phone}
+              {item.district}
             </p>
           </div>
           <div className="col-span-1 flex items-center">
-            <p
-              className={`text-sm dark:text-white ${
-                customer.status == 'active'
-                  ? 'text-green-600'
-                  : customer.status == 'pending'
-                  ? 'text-red-500'
-                  : customer.status == 'blocked'
-                  ? 'text-blue-500'
-                  : 'text-black'
-              }`}
-            >
-              {customer.status}
-            </p>
+            <p className="text-sm text-black dark:text-white">{item.upazila}</p>
           </div>
+
           <div className="col-span-1 flex items-center space-x-2">
             <p className="text-sm text-meta-3">Edit</p>
-            <p className="text-sm text-meta-5">Delete</p>
+            <p className="text-sm text-meta-5">
+              <Link to={`/dashboard/driver/${item._id}`}>View</Link>
+            </p>
           </div>
         </div>
       ))}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };
