@@ -1,14 +1,14 @@
 import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
-import CarwashList from '../components/Carwash/CarwashList';
+import ContactList from '../components/Contact/ContactList';
 import DefaultLayout from '../layout/DefaultLayout';
 
-const Carwash = () => {
+const Contact = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Carwash" />
- <CarwashList/>
+      <Breadcrumb pageName="Contact Form" />
+      <ContactList />
     </DefaultLayout>
   );
 };
 
-export default Carwash;
+export default Contact;

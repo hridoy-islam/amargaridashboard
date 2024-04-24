@@ -4,7 +4,7 @@ export const SearchFilter = ({ onSearch, onEntriesPerPageChange }) => {
       <div className="">
         <input
           onChange={onSearch}
-          placeholder="Search with phone number"
+          placeholder="Search..."
           type="search"
           className="py-2 px-3 w-96 border border-gray-300 rounded-md bg-transparent outline-none"
         />
@@ -20,7 +20,6 @@ export const SearchFilter = ({ onSearch, onEntriesPerPageChange }) => {
               10
             </option>
             <option value="15">15</option>
-            <option value="-1">All</option>
           </select>{' '}
           entries per page
         </label>

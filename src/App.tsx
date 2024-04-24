@@ -9,7 +9,6 @@ import CustomerCreate from './pages/CustomerCreate';
 import CustomerEdit from './pages/CustomerEdit';
 import Car from './pages/Car';
 import CarCreate from './pages/CarCreate';
-import Carwash from './pages/Carwash';
 import CarwashCreate from './pages/CarwashrCreate';
 import FormElements from './pages/Form/FormElements';
 import SignIn from './pages/Authentication/SignIn';
@@ -18,6 +17,9 @@ import DriverList from './components/Driver/DriverList';
 import DriverCreate from './pages/DriverCreate';
 import Driver from './pages/Driver';
 import { DriverView } from './pages/DriverView';
+import Bookings from './pages/Bookings';
+import Contact from './pages/Contact';
+import BookingCreate from './pages/BookingCreate';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -102,21 +104,30 @@ function App() {
         />
 
         <Route
-          path="dashboard/carwash"
+          path="dashboard/booking"
           element={
             <>
-              <PageTitle title="Car Wash List" />
-              <Carwash />
+              <PageTitle title="All Bookings" />
+              <Bookings />
+            </>
+          }
+        />
+        <Route
+          path="dashboard/booking"
+          element={
+            <>
+              <PageTitle title="All Bookings" />
+              <Bookings />
             </>
           }
         />
 
         <Route
-          path="dashboard/carwash/create"
+          path="dashboard/booking/create"
           element={
             <>
-              <PageTitle title="Create Car Wash" />
-              <CarwashCreate />
+              <PageTitle title="Create Service Booking" />
+              <BookingCreate />
             </>
           }
         />
@@ -146,6 +157,15 @@ function App() {
             <>
               <PageTitle title="Driver Details" />
               <DriverView />
+            </>
+          }
+        />
+        <Route
+          path="dashboard/contact"
+          element={
+            <>
+              <PageTitle title="Contact Form" />
+              <Contact />
             </>
           }
         />
