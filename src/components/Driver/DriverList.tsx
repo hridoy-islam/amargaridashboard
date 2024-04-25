@@ -3,6 +3,9 @@ import axiosInstance from '../../axios';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
 import Pagination from '../Pagination/Pagination';
 import { Link } from 'react-router-dom';
+import { TiEyeOutline } from 'react-icons/ti';
+import ConfirmModal from '../Modal/ConfirmModal';
+import { CiTrash } from 'react-icons/ci';
 
 const DriverList = () => {
   const [driver, setDriver] = useState([]);
@@ -12,7 +15,7 @@ const DriverList = () => {
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const fetchData = async (page, entriesPerPage, searchTerm = '') => {
     try {
-      let url = `/drivers?page=${page}&limit=${entriesPerPage}`;
+      let url = `/drivers?page=${page}&limit=${entriesPerPage}&isDeleted=false`;
       // Check if searchTerm is not empty before adding to the URL
       if (searchTerm.trim() !== '') {
         url += `&searchTerm=${searchTerm}`;
@@ -39,6 +42,30 @@ const DriverList = () => {
   const handleEntriesPerPageChange = (event) => {
     setEntriesPerPage(event.target.value);
   };
+
+  const [isConfirmModal, setIsConfirmModal] = useState(false);
+  const [modalData, setModalData] = useState();
+  const closeModal = () => {
+    setIsConfirmModal(false);
+  };
+  const openModal = () => {
+    setIsConfirmModal(true);
+  };
+
+  const handleConfirm = async () => {
+    const res = await axiosInstance.patch(`/drivers/${modalData}`, {
+      isDeleted: true,
+    });
+    if (res.data.success) {
+      fetchData(currentPage, entriesPerPage, searchTerm);
+    }
+    setIsConfirmModal(false); // Close the modal after confirmation
+  };
+  const handleStatus = (id) => {
+    openModal();
+    setModalData(id);
+  };
+
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <SearchFilter
@@ -101,9 +128,16 @@ const DriverList = () => {
           </div>
 
           <div className="col-span-1 flex items-center space-x-2">
-            <p className="text-sm text-meta-3">Edit</p>
-            <p className="text-sm text-meta-5">
-              <Link to={`/dashboard/driver/${item._id}`}>View</Link>
+            <Link to={`/dashboard/driver/${item._id}`}>
+              <p className="text-xl text-blue-500 cursor-pointer">
+                <TiEyeOutline />
+              </p>
+            </Link>
+            <p
+              className="text-lg text-danger cursor-pointer"
+              onClick={() => handleStatus(item._id)}
+            >
+              <CiTrash />
             </p>
           </div>
         </div>
@@ -112,6 +146,13 @@ const DriverList = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}
+      />
+      <ConfirmModal
+        isOpen={isConfirmModal}
+        title="Confirm Delete Driver"
+        message="Are you sure you want to Delete this Driver?"
+        onCancel={closeModal}
+        onConfirm={handleConfirm}
       />
     </div>
   );

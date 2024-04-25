@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export const DriverDetails = ({ driver }) => {
   console.log(driver);
   return (
@@ -12,39 +14,35 @@ export const DriverDetails = ({ driver }) => {
           </div>
           <div className="flex flex-col gap-5.5 p-6.5">
             <div>
-              <label className="mb-3 block text-black dark:text-white">
-                Drivers Name
-              </label>
-              <p>{driver.name}</p>
+              <p className="mb-3 block text-black dark:text-white">
+                <b>Drivers Name</b> : {driver?.name}
+              </p>
             </div>
 
             <div>
-              <label className="mb-3 block text-black dark:text-white">
-                Drivers Phone
-              </label>
-              <p>{driver.phone}</p>
+              <p className="mb-3 block text-black dark:text-white">
+                <b>Drivers Phone</b> : {driver?.phone}
+              </p>
             </div>
-
             <div>
-              <label className="mb-3 block text-black dark:text-white">
-                Division
-              </label>
-
-              <p>{driver.division}</p>
+              <p className="mb-3 block text-black dark:text-white">
+                <b>Drivers Division</b> : {driver?.division}
+              </p>
             </div>
-
             <div>
-              <label className="mb-3 block text-black dark:text-white">
-                District
-              </label>
-              <p>{driver.district}</p>
+              <p className="mb-3 block text-black dark:text-white">
+                <b>Drivers District</b> : {driver?.district}
+              </p>
             </div>
-
             <div>
-              <label className="mb-3 block text-black dark:text-white">
-                Upazila
-              </label>
-              <p>{driver.upazila}</p>
+              <p className="mb-3 block text-black dark:text-white">
+                <b>Drivers Upazila</b> : {driver?.upazila}
+              </p>
+            </div>
+            <div>
+              <p className="mb-3 block text-black dark:text-white">
+                <b>Drivers Car</b> : {driver?.car}
+              </p>
             </div>
           </div>
         </div>
@@ -52,43 +50,67 @@ export const DriverDetails = ({ driver }) => {
       <div className="flex flex-col gap-9">
         {/* <!-- Input Fields --> */}
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-          <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-            <h3 className="font-medium text-black dark:text-white">
-              Other Details
-            </h3>
-          </div>
           <div className="flex flex-col gap-5.5 p-6.5">
-            <div>
-              <label className="mb-3 block text-black dark:text-white">
-                Car Name
-              </label>
-              <p>{driver.car}</p>
-            </div>
-
             <div>
               <label className="mb-3 block text-black dark:text-white">
                 Driving License Front Side
               </label>
-              <p>{driver.licenseFront}</p>
+              <Link
+                to={`http://localhost:4000/uploads/${driver?.licenseFront}`}
+                target="_blank"
+              >
+                <img
+                  src={`http://localhost:4000/uploads/${driver?.licenseFront}`}
+                  alt=""
+                  className="w-40 h-40"
+                />
+              </Link>
             </div>
             <div>
               <label className="mb-3 block text-black dark:text-white">
                 Driving License Back Side
               </label>
-              <p>{driver.licenseBack}</p>
+              <Link
+                to={`http://localhost:4000/uploads/${driver?.licenseBack}`}
+                target="_blank"
+              >
+                <img
+                  src={`http://localhost:4000/uploads/${driver?.licenseBack}`}
+                  alt=""
+                  className="w-40 h-40"
+                />
+              </Link>
             </div>
 
             <div>
               <label className="mb-3 block text-black dark:text-white">
                 Car Bluebook / RC Front Side
               </label>
-              <p>{driver.bluebookFront}</p>
+              <Link
+                to={`http://localhost:4000/uploads/${driver?.bluebookFront}`}
+                target="_blank"
+              >
+                <img
+                  src={`http://localhost:4000/uploads/${driver?.bluebookFront}`}
+                  alt=""
+                  className="w-40 h-40"
+                />
+              </Link>
             </div>
             <div>
               <label className="mb-3 block text-black dark:text-white">
                 Car Bluebook / RC Back Side
               </label>
-              <p>{driver.bluebookBack}</p>
+              <Link
+                to={`http://localhost:4000/uploads/${driver?.bluebookBack}`}
+                target="_blank"
+              >
+                <img
+                  src={`http://localhost:4000/uploads/${driver?.bluebookBack}`}
+                  alt=""
+                  className="w-40 h-40"
+                />
+              </Link>
             </div>
           </div>
         </div>

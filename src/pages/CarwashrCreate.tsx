@@ -1,5 +1,5 @@
 import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
-import CarwashCreateForm from '../components/Booking/CarwashCreateForm';
+import CarwashCreateForm from '../components/Booking/BookingCreateForm';
 import DefaultLayout from '../layout/DefaultLayout';
 
 const CarwashCreate = () => {

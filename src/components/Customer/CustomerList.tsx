@@ -3,6 +3,11 @@ import axiosInstance from '../../axios';
 import Pagination from '../Pagination/Pagination';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
 import { Link } from 'react-router-dom';
+import { ImBlocked } from 'react-icons/im';
+import ConfirmModal from '../Modal/ConfirmModal';
+import { TiEyeOutline } from 'react-icons/ti';
+import { FaCheck } from 'react-icons/fa';
+import { FaPenToSquare } from 'react-icons/fa6';
 
 const CustomerList = () => {
   const [customer, setCustomer] = useState([]);
@@ -10,6 +15,30 @@ const CustomerList = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [entriesPerPage, setEntriesPerPage] = useState(10);
+
+  const [isConfirmModal, setIsConfirmModal] = useState(false);
+  const [modalData, setModalData] = useState();
+  const closeModal = () => {
+    setIsConfirmModal(false);
+  };
+  const openModal = () => {
+    setIsConfirmModal(true);
+  };
+
+  const handleConfirm = async () => {
+    const res = await axiosInstance.patch(`/users/${modalData}`, {
+      status: 'block',
+    });
+    if (res.data.success) {
+      fetchData(currentPage, entriesPerPage, searchTerm);
+    }
+    setIsConfirmModal(false); // Close the modal after confirmation
+  };
+
+  const handleStatus = (id) => {
+    openModal();
+    setModalData(id);
+  };
 
   const fetchData = async (page, entriesPerPage, searchTerm = '') => {
     try {
@@ -84,24 +113,38 @@ const CustomerList = () => {
           </div>
           <div className="col-span-1 flex items-center">
             <p
-              className={`text-sm dark:text-white ${
+              className={` text-md dark:text-white ${
                 item.status == 'active'
                   ? 'text-green-600'
-                  : item.status == 'pending'
+                  : item?.status == 'block'
                   ? 'text-red-500'
-                  : item.status == 'blocked'
-                  ? 'text-blue-500'
                   : 'text-black'
               }`}
             >
-              {item.status}
+              {item?.status.toUpperCase()}
             </p>
           </div>
           <div className="col-span-1 flex items-center space-x-2">
             <p className="text-sm text-meta-3">
-              <Link to={`/dashboard/customer/${item._id}`}>Edit</Link>
+              <Link to={`/dashboard/customer/${item._id}`}>
+                <FaPenToSquare />
+              </Link>
             </p>
-            <p className="text-sm text-meta-5">Delete</p>
+            {item?.status === 'active' ? (
+              <p
+                className="text-lg text-danger cursor-pointer"
+                onClick={() => handleStatus(item._id)}
+              >
+                <ImBlocked />
+              </p>
+            ) : (
+              <p
+                className="text-lg text-blue-500 cursor-pointer"
+                onClick={() => handleStatus(item._id)}
+              >
+                <FaCheck />
+              </p>
+            )}
           </div>
         </div>
       ))}
@@ -110,6 +153,13 @@ const CustomerList = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}
+      />
+      <ConfirmModal
+        isOpen={isConfirmModal}
+        title="Confirm Block User"
+        message="Are you sure you want to block this user?"
+        onCancel={closeModal}
+        onConfirm={handleConfirm}
       />
     </div>
   );

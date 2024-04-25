@@ -50,7 +50,7 @@ const DropdownUser = () => {
           <span className="block text-sm font-medium text-black dark:text-white">
             {user.name}
           </span>
-          <span className="block text-xs">{user.role.toUpperCase()}</span>
+          <span className="block text-xs">{user?.role.toUpperCase()}</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
@@ -83,10 +83,7 @@ const DropdownUser = () => {
           dropdownOpen === true ? 'block' : 'hidden'
         }`}
       >
-        <Link
-          to="/"
-          className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-        >
+        <button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
           <svg
             className="fill-current"
             width="22"
@@ -104,8 +101,8 @@ const DropdownUser = () => {
               fill=""
             />
           </svg>
-          Log Out
-        </Link>
+          <span>Log Out</span>
+        </button>
       </div>
       {/* <!-- Dropdown End --> */}
     </div>

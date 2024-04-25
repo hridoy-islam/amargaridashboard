@@ -5,6 +5,7 @@ import districtsData from '../../js/districts.json';
 import upazilasData from '../../js/upazilas.json';
 import ReactSelect from 'react-select';
 import axiosInstance from '../../axios';
+import toast from 'react-hot-toast';
 
 type Inputs = {
   name: string;
@@ -46,6 +47,7 @@ const DriverCreateForm = () => {
     control,
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<Inputs>();
 
@@ -53,11 +55,14 @@ const DriverCreateForm = () => {
     try {
       // Create FormData object to send files
       const formData = new FormData();
+      const division = data.division.value;
+      const district = data.district.value;
+      const upazila = data.upazila.value;
       formData.append('name', data.name);
       formData.append('phone', data.phone);
-      formData.append('division', data.division);
-      formData.append('district', data.district);
-      formData.append('upazila', data.upazila);
+      formData.append('division', division);
+      formData.append('district', district);
+      formData.append('upazila', upazila);
       formData.append('car', data.car);
       formData.append('licenseFront', data.licenseFront[0]);
       formData.append('licenseBack', data.licenseBack[0]);
@@ -69,7 +74,10 @@ const DriverCreateForm = () => {
       // Make API request using Axios
       const response = await axiosInstance.post('/drivers', formData);
 
-      console.log(response.data); // Log the response from the API
+      if (response.data.success) {
+        toast.success('Driver Added successfullt');
+        reset();
+      }
     } catch (error) {
       console.error('Error:', error);
     }

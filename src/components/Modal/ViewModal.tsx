@@ -42,63 +42,10 @@ const ViewModal = ({ isOpen, title, data, onCancel, type }) => {
         <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full relative z-10 modal-content">
           <div className="p-4">
             <div className="text-lg font-semibold mb-8" id="modal-title">
-              {title} -{' '}
-              <span
-                className={`${
-                  data?.status === 'pending'
-                    ? 'bg-red-500'
-                    : data?.status === 'approved'
-                    ? 'bg-blue-500'
-                    : 'bg-warning'
-                } text-white p-2`}
-              >
-                {data?.status.toUpperCase()}
-              </span>
+              {title}
             </div>
-            <div className="mb-6">
-              {type === 'booking' && (
-                <>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="mb-2">
-                      <span className="font-semibold">Booking Date</span>:{' '}
-                      {moment(data?.bookingDate).format('MMM Do YY')}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold">Address</span>:{' '}
-                      {data.address}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold">Customer Name</span>:{' '}
-                      {data.name}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold">Customer Phone</span>:{' '}
-                      {data.phone}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold">Car</span>: {data.car}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold">Message</span>:{' '}
-                      {data.message}
-                    </div>
-
-                    <div className="mb-2">
-                      <span className="font-semibold">Booked By</span>:{' '}
-                      {data.userid.name}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold">Booked Email</span>:{' '}
-                      {data.userid.email}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold">Date When Booked</span>:{' '}
-                      {moment(data?.userid.createdAt).format('MMM Do YY')}
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
+            {type === 'booking' && <RenderBooking data={data} />}
+            {type === 'contact' && <RenderContact data={data} />}
           </div>
         </div>
       </div>
@@ -107,3 +54,83 @@ const ViewModal = ({ isOpen, title, data, onCancel, type }) => {
 };
 
 export default ViewModal;
+
+const RenderContact = ({ data }) => {
+  return (
+    <div className="mb-6">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="mb-2">
+          <span className="font-semibold">Requested Date</span>:{' '}
+          {moment(data?.createdAt).format('MMM Do YY')}
+        </div>
+
+        <div className="mb-2">
+          <span className="font-semibold">Name</span>: {data?.name}
+        </div>
+        <div className="mb-2">
+          <span className="font-semibold">Phone</span>: {data?.phone}
+        </div>
+        <div className="mb-2">
+          <span className="font-semibold">Email</span>: {data?.email}
+        </div>
+        <div className="mb-2">
+          <span className="font-semibold">Message</span>: {data?.message}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const RenderBooking = ({ data }) => {
+  return (
+    <div className="mb-6">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="mb-2">
+          <span className="font-semibold">Booking Date</span>:{' '}
+          {moment(data?.bookingDate).format('MMM Do YY')}
+        </div>
+        <div className="mb-2">
+          <span className="font-semibold">Address</span>: {data?.address}
+        </div>
+        <div className="mb-2">
+          <span className="font-semibold">Customer Name</span>: {data?.name}
+        </div>
+        <div className="mb-2">
+          <span className="font-semibold">Customer Phone</span>: {data?.phone}
+        </div>
+        <div className="mb-2">
+          <span className="font-semibold">Car</span>: {data?.car}
+        </div>
+        <div className="mb-2">
+          <span className="font-semibold">Message</span>: {data?.message}
+        </div>
+        <div className="mb-2">
+          <span className="font-semibold">Status</span>:
+          <span
+            className={`${
+              data?.status === 'pending'
+                ? 'bg-red-500'
+                : data?.status === 'approved'
+                ? 'bg-blue-500'
+                : 'bg-warning'
+            } text-white p-2 ml-2`}
+          >
+            {data?.status?.toUpperCase()}
+          </span>
+        </div>
+
+        <div className="mb-2">
+          <span className="font-semibold">Booked By</span>: {data?.userid?.name}
+        </div>
+        <div className="mb-2">
+          <span className="font-semibold">Booked Email</span>:{' '}
+          {data?.userid?.email}
+        </div>
+        <div className="mb-2">
+          <span className="font-semibold">Date When Booked</span>:{' '}
+          {moment(data?.userid?.createdAt).format('MMM Do YY')}
+        </div>
+      </div>
+    </div>
+  );
+};

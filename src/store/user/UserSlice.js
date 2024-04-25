@@ -15,6 +15,10 @@ export const loginUser = createAsyncThunk(
   },
 );
 
+export const logout = createAsyncThunk('user/logout', async () => {
+  return null;
+});
+
 const userSlice = createSlice({
   name: 'user',
   initialState: {

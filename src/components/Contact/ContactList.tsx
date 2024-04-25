@@ -4,6 +4,7 @@ import Pagination from '../Pagination/Pagination';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
 import moment from 'moment';
 import { TiEyeOutline } from 'react-icons/ti';
+import ViewModal from '../Modal/ViewModal';
 
 const ContactList = () => {
   const [contact, setContact] = useState([]);
@@ -12,16 +13,16 @@ const ContactList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [entriesPerPage, setEntriesPerPage] = useState(10);
 
-  // const [isViewModal, setIsViewModal] = useState(false);
-  // const [viewModalData, setViewModalData] = useState();
+  const [isViewModal, setIsViewModal] = useState(false);
+  const [viewModalData, setViewModalData] = useState();
 
-  // const handleViewModal = (item) => {
-  //   setViewModalData(item);
-  //   setIsViewModal(true);
-  // };
-  // const closeViewModal = () => {
-  //   setIsViewModal(false);
-  // };
+  const handleViewModal = (item) => {
+    setViewModalData(item);
+    setIsViewModal(true);
+  };
+  const closeViewModal = () => {
+    setIsViewModal(false);
+  };
 
   const fetchData = async (page, entriesPerPage, searchTerm = '') => {
     try {
@@ -108,7 +109,7 @@ const ContactList = () => {
           <div className="col-span-1 flex items-center space-x-2">
             <p
               className="text-xl text-success cursor-pointer"
-              // onClick={() => handleViewModal(item)}
+              onClick={() => handleViewModal(item)}
             >
               <TiEyeOutline />
             </p>
@@ -120,6 +121,13 @@ const ContactList = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}
+      />
+      <ViewModal
+        isOpen={isViewModal}
+        title="Contact Details"
+        data={viewModalData}
+        onCancel={closeViewModal}
+        type={'contact'}
       />
     </div>
   );

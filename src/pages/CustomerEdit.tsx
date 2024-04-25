@@ -25,7 +25,7 @@ const CustomerEdit = () => {
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Edit Customer" />
-      <CustomerEditForm defaultValues={userData} />
+      <CustomerEditForm userData={userData} />
     </DefaultLayout>
   );
 };

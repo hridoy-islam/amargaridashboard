@@ -1,21 +1,16 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import axiosInstance from '../../axios.js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 type Inputs = {
-  createdAt: string;
   email: string;
-  isDeleted: boolean;
   name: string;
   phone: string;
-  role: string;
-  status: string;
-  updatedAt: string;
-  __v: string;
-  _id: string;
+  password?: string;
 };
-const CustomerEditForm = ({ defaultValues }) => {
+const CustomerEditForm = ({ userData }) => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const {
     register,
@@ -23,20 +18,16 @@ const CustomerEditForm = ({ defaultValues }) => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const postData = async (formData) => {
-    await axiosInstance
-      .patch(`/users/${id}`, formData)
-      .then(function (response) {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    try {
+      const res = await axiosInstance.patch(`/users/${id}`, data);
+      if (res.data.success) {
         toast.success('customer updated successfully');
         navigate('/dashboard/customer');
-      })
-      .catch(function (error) {
-        toast.error(error.response.data.message);
-      });
-  };
-
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    postData(data);
+      }
+    } catch (error) {
+      toast.error('Something Went wrong!');
+    }
   };
 
   return (
@@ -59,6 +50,7 @@ const CustomerEditForm = ({ defaultValues }) => {
                   type="text"
                   {...register('name', { required: true })}
                   placeholder="Name"
+                  defaultValue={userData?.name}
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
                 {errors.name && <span>Name is required</span>}
@@ -71,6 +63,7 @@ const CustomerEditForm = ({ defaultValues }) => {
                   type="email"
                   {...register('email', { required: true })}
                   placeholder="Email"
+                  defaultValue={userData?.email}
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
                 {errors.email && <span>Email is required</span>}
@@ -87,6 +80,7 @@ const CustomerEditForm = ({ defaultValues }) => {
                     minLength: 11,
                   })}
                   placeholder="Phone"
+                  defaultValue={userData?.phone}
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
                 {errors.phone && (
@@ -100,7 +94,7 @@ const CustomerEditForm = ({ defaultValues }) => {
                 <input
                   type="password"
                   placeholder="Password"
-                  {...register('password', { required: true, minLength: 4 })}
+                  {...register('password', { minLength: 4 })}
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
                 {errors.password && <span>Password minimum 4 characters</span>}
@@ -108,6 +102,7 @@ const CustomerEditForm = ({ defaultValues }) => {
               <div>
                 <input
                   type="submit"
+                  value={'Update'}
                   className="rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black cursor-pointer"
                 />
               </div>

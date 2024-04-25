@@ -150,16 +150,16 @@ const BookingList = () => {
           <div className="col-span-1 flex items-center">
             <p
               className={`text-sm font-semibold dark:text-white ${
-                item.status == 'completed'
+                item?.status == 'completed'
                   ? 'text-green-600'
-                  : item.status == 'pending'
+                  : item?.status == 'pending'
                   ? 'text-red-500'
-                  : item.status == 'approved'
+                  : item?.status == 'approved'
                   ? 'text-blue-500'
                   : 'text-black'
               }`}
             >
-              {item.status.toUpperCase()}
+              {item?.status.toUpperCase()}
             </p>
           </div>
           <div className="col-span-1 flex items-center space-x-2">
