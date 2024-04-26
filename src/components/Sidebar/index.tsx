@@ -6,6 +6,9 @@ import { GrContact } from 'react-icons/gr';
 import { RiContactsLine } from 'react-icons/ri';
 import { BsCalendar2Date } from 'react-icons/bs';
 import { RiRoadsterFill } from 'react-icons/ri';
+import { CiLogout } from 'react-icons/ci';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../store/user/UserSlice';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -58,6 +61,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       document.querySelector('body')?.classList.remove('sidebar-expanded');
     }
   }, [sidebarExpanded]);
+
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    // Dispatch the logout action
+    dispatch(logout());
+    // Clear the persisted state from local storage
+    localStorage.removeItem('persist:garirmela');
+    window.location.reload();
+  };
 
   return (
     <aside
@@ -510,6 +522,29 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   );
                 }}
               </SidebarLinkGroup>
+
+              <SidebarLinkGroup
+                activeCondition={pathname === '/' || pathname.includes('/')}
+              >
+                {(handleClick, open) => {
+                  return (
+                    <React.Fragment>
+                      <NavLink
+                        to=""
+                        onClick={handleLogout}
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                          (pathname === '/' || pathname.includes('/')) &&
+                          'bg-graydark dark:bg-meta-4'
+                        }`}
+                      >
+                        <CiLogout />
+                        Log Out
+                      </NavLink>
+                    </React.Fragment>
+                  );
+                }}
+              </SidebarLinkGroup>
+
               {/* <!-- Menu Item Contact--> */}
             </ul>
           </div>

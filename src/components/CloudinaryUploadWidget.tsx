@@ -57,7 +57,7 @@ function CloudinaryUploadWidget({ uwConfig, setPublicId }) {
           initializeCloudinaryWidget();
         }}
       >
-        Upload
+        Click Here to Upload Images
       </button>
     </CloudinaryScriptContext.Provider>
   );

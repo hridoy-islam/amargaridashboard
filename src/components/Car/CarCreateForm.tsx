@@ -83,8 +83,6 @@ const CarCreateForm = () => {
         gallery,
       };
 
-      console.log('formdata', formData);
-      // Make API request using Axios
       const response = await axiosInstance.post('/cars', formData);
 
       if (response.data.success) {

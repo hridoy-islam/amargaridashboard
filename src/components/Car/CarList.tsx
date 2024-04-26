@@ -1,31 +1,114 @@
-import { Car } from '../../types/Car';
-
-const customerData: Car[] = [
-  {
-    title: 'Toyota Noah X-2 DOOR POWER 2013',
-    model: 'Noah',
-    brand: 'Toyota',
-    price: 2500000,
-    year: 2013,
-    description: 'X-2 DOOR POWER',
-    status: 'active',
-  },
- 
-];
+import { useEffect, useState } from 'react';
+import axiosInstance from '../../axios';
+import Pagination from '../Pagination/Pagination';
+import { SearchFilter } from '../SearchFilter/SearchFilter';
+import { Link } from 'react-router-dom';
+import moment from 'moment';
+import { TiTick, TiEyeOutline } from 'react-icons/ti';
+import { CiTrash } from 'react-icons/ci';
+import ConfirmModal from '../Modal/ConfirmModal';
+import ViewModal from '../Modal/ViewModal';
 
 const CarList = () => {
+  const [cars, setCars] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
+
+  const [isConfirmModal, setIsConfirmModal] = useState(false);
+  const [isViewModal, setIsViewModal] = useState(false);
+  const [modalData, setModalData] = useState();
+  const [viewModalData, setViewModalData] = useState();
+
+  const openModal = () => {
+    setIsConfirmModal(true);
+  };
+  const closeModal = () => {
+    setIsConfirmModal(false);
+  };
+
+  const handleViewModal = (item) => {
+    setViewModalData(item);
+    setIsViewModal(true);
+  };
+  const closeViewModal = () => {
+    setIsViewModal(false);
+  };
+
+  const handleConfirm = async () => {
+    // Perform action when confirmed
+    // For example, delete an item, submit a form, etc.
+    console.log('Confirmed action', modalData);
+    const res = await axiosInstance.patch(`/cars/${modalData}`, {
+      status: 'approve',
+    });
+    if (res.data.success) {
+      fetchData(currentPage, entriesPerPage, searchTerm);
+    }
+    setIsConfirmModal(false); // Close the modal after confirmation
+  };
+
+  const fetchData = async (page, entriesPerPage, searchTerm = '') => {
+    try {
+      let url = `/cars?page=${page}&limit=${entriesPerPage}`;
+      // Check if searchTerm is not empty before adding to the URL
+      if (searchTerm.trim() !== '') {
+        url += `&searchTerm=${searchTerm}`;
+      }
+
+      const response = await axiosInstance.get(url);
+      setCars(response.data.data.result);
+      setTotalPages(response.data.data.meta.totalPage);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(currentPage, entriesPerPage, searchTerm);
+  }, [currentPage, entriesPerPage, searchTerm]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const handleEntriesPerPageChange = (event) => {
+    setEntriesPerPage(event.target.value);
+  };
+
+  const handleStatus = (id) => {
+    openModal();
+    setModalData(id);
+  };
+
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      <SearchFilter
+        onSearch={handleSearch}
+        onEntriesPerPageChange={handleEntriesPerPageChange}
+      />
       <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
-        <div className="col-span-3 flex items-center">
+        <div className="col-span-1 flex items-center">
           <p className="font-medium">Title</p>
         </div>
-     
         <div className="col-span-1 flex items-center">
-          <p className="font-medium">Model</p>
+          <p className="font-medium">brand</p>
+        </div>
+        <div className="col-span-1 hidden items-center sm:flex">
+          <p className="font-medium">Registration</p>
         </div>
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Price</p>
+        </div>
+        <div className="col-span-1 flex items-center">
+          <p className="font-medium">Posted By</p>
+        </div>
+        <div className="col-span-1 flex items-center">
+          <p className="font-medium">Email</p>
         </div>
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Status</p>
@@ -35,50 +118,88 @@ const CarList = () => {
         </div>
       </div>
 
-      {customerData.map((customer, key) => (
+      {cars.map((item, key) => (
         <div
           className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
           key={key}
         >
-          <div className="col-span-3 flex items-center">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-              <p className="text-sm text-black dark:text-white">
-                {customer.title}
-              </p>
-            </div>
+          <div className="col-span-1 hidden items-center sm:flex">
+            <p className="text-sm text-black dark:text-white">{item.title}</p>
+          </div>
+          <div className="col-span-1 hidden items-center sm:flex">
+            <p className="text-sm text-black dark:text-white">{item.brand}</p>
           </div>
           <div className="col-span-1 flex items-center">
             <p className="text-sm text-black dark:text-white">
-              {customer.model}
+              {item.registration_year}
+            </p>
+          </div>
+          <div className="col-span-1 flex items-center">
+            <p className="text-sm text-black dark:text-white">{item.price}</p>
+          </div>
+          <div className="col-span-1 flex items-center">
+            <p className="text-sm text-black dark:text-white">
+              {item.userid.name}
             </p>
           </div>
           <div className="col-span-1 flex items-center">
             <p className="text-sm text-black dark:text-white">
-              {customer.price}
+              {item.userid.email}
             </p>
           </div>
-         
           <div className="col-span-1 flex items-center">
             <p
-              className={`text-sm dark:text-white ${
-                customer.status == 'active'
+              className={`text-sm font-semibold dark:text-white ${
+                item?.status == 'sold'
                   ? 'text-green-600'
-                  : customer.status == 'pending'
+                  : item?.status == 'pending'
                   ? 'text-red-500'
-                  : customer.status == 'blocked'
+                  : item?.status == 'approve'
                   ? 'text-blue-500'
                   : 'text-black'
               }`}
             >
-              {customer.status}
+              {item?.status.toUpperCase()}
             </p>
           </div>
           <div className="col-span-1 flex items-center space-x-2">
-            <p className="text-sm text-meta-3">Edit</p>
-            <p className="text-sm text-meta-5">Delete</p>
+            <p
+              className="text-3xl text-meta-3 cursor-pointer"
+              onClick={() => handleStatus(item._id)}
+            >
+              <TiTick />
+            </p>
+
+            <p
+              className="text-3xl text-meta-5 cursor-pointer"
+              onClick={() => handleViewModal(item)}
+            >
+              <TiEyeOutline />
+            </p>
           </div>
         </div>
       ))}
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
+      <ConfirmModal
+        isOpen={isConfirmModal}
+        title="Approve Car"
+        message="Are you sure you want to approve this car listing?"
+        onCancel={closeModal}
+        onConfirm={handleConfirm}
+      />
+
+      <ViewModal
+        isOpen={isViewModal}
+        title="Booking Details"
+        data={viewModalData}
+        onCancel={closeViewModal}
+        type="booking"
+      />
     </div>
   );
 };

@@ -10,8 +10,16 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
 
-  if (user === undefined) {
-    navigate('/');
+  useEffect(() => {
+    // Check if the user is not logged in, then redirect to the login page
+    if (!user) {
+      navigate('/');
+    }
+  }, [user]);
+
+  // Render the layout only if the user is logged in
+  if (!user) {
+    return navigate('/');
   }
 
   return (
