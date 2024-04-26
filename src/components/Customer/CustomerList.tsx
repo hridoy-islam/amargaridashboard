@@ -17,6 +17,7 @@ const CustomerList = () => {
   const [entriesPerPage, setEntriesPerPage] = useState(10);
 
   const [isConfirmModal, setIsConfirmModal] = useState(false);
+  const [isApproveModal, setIsApproveModal] = useState(false);
   const [modalData, setModalData] = useState();
   const closeModal = () => {
     setIsConfirmModal(false);
@@ -38,6 +39,25 @@ const CustomerList = () => {
   const handleStatus = (id) => {
     openModal();
     setModalData(id);
+  };
+
+  const handleApprove = (id) => {
+    setModalData(id);
+    setIsApproveModal(true)
+  };
+
+  const closeApprove = () => {
+    setIsApproveModal(true)
+  };
+
+  const handleApproveConfirm = async () => {
+    const res = await axiosInstance.patch(`/users/${modalData}`, {
+      status: 'active',
+    });
+    if (res.data.success) {
+      fetchData(currentPage, entriesPerPage, searchTerm);
+    }
+    setIsApproveModal(false); // Close the modal after confirmation
   };
 
   const fetchData = async (page, entriesPerPage, searchTerm = '') => {
@@ -140,7 +160,7 @@ const CustomerList = () => {
             ) : (
               <p
                 className="text-lg text-blue-500 cursor-pointer"
-                onClick={() => handleStatus(item._id)}
+                onClick={() => handleApprove(item._id)}
               >
                 <FaCheck />
               </p>
@@ -160,6 +180,13 @@ const CustomerList = () => {
         message="Are you sure you want to block this user?"
         onCancel={closeModal}
         onConfirm={handleConfirm}
+      />
+      <ConfirmModal
+        isOpen={isApproveModal}
+        title="Confirm Active User"
+        message="Are you sure you want to Active this user?"
+        onCancel={closeApprove}
+        onConfirm={handleApproveConfirm}
       />
     </div>
   );

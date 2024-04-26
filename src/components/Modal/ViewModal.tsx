@@ -30,7 +30,7 @@ const ViewModal = ({ isOpen, title, data, onCancel, type }) => {
 
   return (
     <div
-      className={`fixed z-50 inset-0 overflow-y-auto ${modalContainerClass}`}
+      className={`fixed z-999 inset-0 overflow-y-auto ${modalContainerClass}`}
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
@@ -46,6 +46,7 @@ const ViewModal = ({ isOpen, title, data, onCancel, type }) => {
             </div>
             {type === 'booking' && <RenderBooking data={data} />}
             {type === 'contact' && <RenderContact data={data} />}
+            {type === 'car' && <RenderCar data={data} />}
           </div>
         </div>
       </div>
@@ -54,6 +55,98 @@ const ViewModal = ({ isOpen, title, data, onCancel, type }) => {
 };
 
 export default ViewModal;
+const RenderCar = ({ data }) => {
+  return (
+    <div className="mb-6">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="mb-1">
+          <span className="font-semibold">Title</span>: {data?.title}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Brand</span>: {data?.brand}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Model</span>: {data?.model}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Color</span>: {data?.color}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Condition</span>: {data?.condition}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Condition</span>: {data?.condition}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Price</span>: {data?.price}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Phone</span>: {data?.phone}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Production Year</span>:{' '}
+          {data?.production_year}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Registration Year</span>:{' '}
+          {data?.registration_year}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Transmition</span>:{' '}
+          {data?.transmition}
+        </div>
+
+        <div className="mb-1">
+          <span className="font-semibold">Datails</span>: details
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">District</span>: {data?.district}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Division</span>: {data?.division}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Upazila</span>: {data?.upazila}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Engine Capacity</span>:{' '}
+          {data?.engine_capacity} CC
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Kilometer</span>: {data?.kilometer}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Status</span>: {data?.status}
+        </div>
+
+        <div className="mb-1">
+          <span className="font-semibold">Status</span>:{' '}
+          {data?.fuelType.map((item, index) => (
+            <span className="text-md mx-1" key={index}>
+              {item.label}
+            </span>
+          ))}
+        </div>
+        <div className="mb-1">
+          <span className="font-semibold">Date Posted</span>: {data?.createdAt}
+        </div>
+        <div className="mb-1">
+        <span className="font-semibold">Gallery</span>
+          <span className="flex">
+          {data?.gallery?.map((item, index) => (
+            <img
+              key={index}
+              src={`https://res.cloudinary.com/dneodtbad/image/upload/${item}`}
+              className="h-16 max-w-full cursor-pointer rounded-lg object-cover object-center mr-1"
+              alt="gallery-image"
+            />
+          ))}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const RenderContact = ({ data }) => {
   return (

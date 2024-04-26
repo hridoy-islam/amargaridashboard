@@ -2,12 +2,10 @@ import { useEffect, useState } from 'react';
 import axiosInstance from '../../axios';
 import Pagination from '../Pagination/Pagination';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
 import { TiTick, TiEyeOutline } from 'react-icons/ti';
-import { CiTrash } from 'react-icons/ci';
 import ConfirmModal from '../Modal/ConfirmModal';
 import ViewModal from '../Modal/ViewModal';
+import { IoCheckmarkDoneCircle } from "react-icons/io5";
 
 const CarList = () => {
   const [cars, setCars] = useState([]);
@@ -17,6 +15,7 @@ const CarList = () => {
   const [entriesPerPage, setEntriesPerPage] = useState(10);
 
   const [isConfirmModal, setIsConfirmModal] = useState(false);
+  const [isSoldModal, setIsSoldModal] = useState(false)
   const [isViewModal, setIsViewModal] = useState(false);
   const [modalData, setModalData] = useState();
   const [viewModalData, setViewModalData] = useState();
@@ -26,6 +25,13 @@ const CarList = () => {
   };
   const closeModal = () => {
     setIsConfirmModal(false);
+  };
+  const closeModalSold = () => {
+    setIsSoldModal(false);
+  };
+
+  const handleSold = () => {
+    setIsSoldModal(true);
   };
 
   const handleViewModal = (item) => {
@@ -37,9 +43,7 @@ const CarList = () => {
   };
 
   const handleConfirm = async () => {
-    // Perform action when confirmed
-    // For example, delete an item, submit a form, etc.
-    console.log('Confirmed action', modalData);
+    
     const res = await axiosInstance.patch(`/cars/${modalData}`, {
       status: 'approve',
     });
@@ -47,6 +51,17 @@ const CarList = () => {
       fetchData(currentPage, entriesPerPage, searchTerm);
     }
     setIsConfirmModal(false); // Close the modal after confirmation
+  };
+
+  const handleConfirmSold = async () => {
+    
+    const res = await axiosInstance.patch(`/cars/${modalData}`, {
+      status: 'sold',
+    });
+    if (res.data.success) {
+      fetchData(currentPage, entriesPerPage, searchTerm);
+    }
+    setIsSoldModal(false); // Close the modal after confirmation
   };
 
   const fetchData = async (page, entriesPerPage, searchTerm = '') => {
@@ -96,7 +111,7 @@ const CarList = () => {
           <p className="font-medium">Title</p>
         </div>
         <div className="col-span-1 flex items-center">
-          <p className="font-medium">brand</p>
+          <p className="font-medium">Brand</p>
         </div>
         <div className="col-span-1 hidden items-center sm:flex">
           <p className="font-medium">Registration</p>
@@ -107,9 +122,7 @@ const CarList = () => {
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Posted By</p>
         </div>
-        <div className="col-span-1 flex items-center">
-          <p className="font-medium">Email</p>
-        </div>
+        
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Status</p>
         </div>
@@ -142,11 +155,7 @@ const CarList = () => {
               {item.userid.name}
             </p>
           </div>
-          <div className="col-span-1 flex items-center">
-            <p className="text-sm text-black dark:text-white">
-              {item.userid.email}
-            </p>
-          </div>
+         
           <div className="col-span-1 flex items-center">
             <p
               className={`text-sm font-semibold dark:text-white ${
@@ -176,6 +185,12 @@ const CarList = () => {
             >
               <TiEyeOutline />
             </p>
+            {item?.status === 'approve' && <p
+              className="text-3xl text-meta-1 cursor-pointer"
+              onClick={() => handleSold(item._id)}
+            >
+              <IoCheckmarkDoneCircle />
+            </p>}
           </div>
         </div>
       ))}
@@ -192,13 +207,20 @@ const CarList = () => {
         onCancel={closeModal}
         onConfirm={handleConfirm}
       />
+      <ConfirmModal
+        isOpen={isSoldModal}
+        title="Confirm Sold"
+        message="Are you sure is this car sold?"
+        onCancel={closeModalSold}
+        onConfirm={handleConfirmSold}
+      />
 
       <ViewModal
         isOpen={isViewModal}
-        title="Booking Details"
+        title="Car Details"
         data={viewModalData}
         onCancel={closeViewModal}
-        type="booking"
+        type="car"
       />
     </div>
   );
