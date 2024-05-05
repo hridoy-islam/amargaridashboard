@@ -107,9 +107,7 @@ const BookingList = () => {
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Car</p>
         </div>
-        <div className="col-span-1 flex items-center">
-          <p className="font-medium">Email</p>
-        </div>
+        
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Status</p>
         </div>
@@ -142,11 +140,7 @@ const BookingList = () => {
           <div className="col-span-1 flex items-center">
             <p className="text-sm text-black dark:text-white">{item.car}</p>
           </div>
-          <div className="col-span-1 flex items-center">
-            <p className="text-sm text-black dark:text-white">
-              {item.userid.email}
-            </p>
-          </div>
+          
           <div className="col-span-1 flex items-center">
             <p
               className={`text-sm font-semibold dark:text-white ${
