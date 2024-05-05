@@ -6,7 +6,7 @@ export const loginUser = createAsyncThunk(
   'auth/login',
   async (userCredentials) => {
     const request = await axios.post(
-      `http://localhost:4000/api/auth/login`,
+      `${import.meta.env.VITE_API_URL}/auth/login`,
       userCredentials,
     );
     const response = await request.data.data;

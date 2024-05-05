@@ -3,7 +3,7 @@ import store from '../src/store/index';
 
 // Create an instance of axios with custom configurations
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:4000/api',
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 // Add a request interceptor to attach the bearer token to all requests
