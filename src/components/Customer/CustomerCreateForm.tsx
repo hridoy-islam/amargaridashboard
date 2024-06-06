@@ -20,7 +20,7 @@ const CustomerCreateForm = () => {
 
   const postData = async (formData) => {
     await axiosInsance
-      .post('/auth/signup', formData)
+      .post('/register', formData)
       .then(function (response) {
         toast.success('customer added successfully');
         navigate('/dashboard/customer');
@@ -93,7 +93,7 @@ const CustomerCreateForm = () => {
                   Password
                 </label>
                 <input
-                  type="text"
+                  type="password"
                   placeholder="Password"
                   {...register('password', { required: true, minLength: 4 })}
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"

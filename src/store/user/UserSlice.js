@@ -6,16 +6,17 @@ export const loginUser = createAsyncThunk(
   'auth/login',
   async (userCredentials) => {
     const request = await axios.post(
-      `${import.meta.env.VITE_API_URL}/auth/login`,
+      `${import.meta.env.VITE_API_URL}/login`,
       userCredentials,
     );
-    const response = await request.data.data;
+    const response = await request.data;
     localStorage.setItem('garirmela', JSON.stringify(response));
     return response;
   },
 );
 
 export const logout = createAsyncThunk('user/logout', async () => {
+  localStorage.removeItem('garirmela');
   return null;
 });
 
@@ -38,9 +39,8 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.token = action.payload.accessToken;
-        const decodedUser = jwtDecode(action.payload.accessToken);
-        state.user = decodedUser;
+        state.token = action.payload.token;
+        state.user = action.payload.user;
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {

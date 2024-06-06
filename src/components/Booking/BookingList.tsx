@@ -2,10 +2,8 @@ import { useEffect, useState } from 'react';
 import axiosInstance from '../../axios';
 import Pagination from '../Pagination/Pagination';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
-import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { TiTick, TiEyeOutline } from 'react-icons/ti';
-import { CiTrash } from 'react-icons/ci';
 import ConfirmModal from '../Modal/ConfirmModal';
 import ViewModal from '../Modal/ViewModal';
 
@@ -39,7 +37,7 @@ const BookingList = () => {
   const handleConfirm = async () => {
     // Perform action when confirmed
     // For example, delete an item, submit a form, etc.
-    console.log('Confirmed action', modalData);
+
     const res = await axiosInstance.patch(`/booking/${modalData}`, {
       status: 'approved',
     });
@@ -107,7 +105,7 @@ const BookingList = () => {
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Car</p>
         </div>
-        
+
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Status</p>
         </div>
@@ -140,7 +138,7 @@ const BookingList = () => {
           <div className="col-span-1 flex items-center">
             <p className="text-sm text-black dark:text-white">{item.car}</p>
           </div>
-          
+
           <div className="col-span-1 flex items-center">
             <p
               className={`text-sm font-semibold dark:text-white ${
@@ -159,9 +157,9 @@ const BookingList = () => {
           <div className="col-span-1 flex items-center space-x-2">
             <p
               className="text-3xl text-meta-3 cursor-pointer"
-              onClick={() => handleStatus(item._id)}
+              onClick={() => handleStatus(item?.id)}
             >
-              <TiTick />
+              {item?.status === 'pending' && <TiTick />}
             </p>
 
             <p

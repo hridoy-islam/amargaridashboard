@@ -5,7 +5,7 @@ import { SearchFilter } from '../SearchFilter/SearchFilter';
 import { TiTick, TiEyeOutline } from 'react-icons/ti';
 import ConfirmModal from '../Modal/ConfirmModal';
 import ViewModal from '../Modal/ViewModal';
-import { IoCheckmarkDoneCircle } from "react-icons/io5";
+import { IoCheckmarkDoneCircle } from 'react-icons/io5';
 
 const CarList = () => {
   const [cars, setCars] = useState([]);
@@ -15,7 +15,7 @@ const CarList = () => {
   const [entriesPerPage, setEntriesPerPage] = useState(10);
 
   const [isConfirmModal, setIsConfirmModal] = useState(false);
-  const [isSoldModal, setIsSoldModal] = useState(false)
+  const [isSoldModal, setIsSoldModal] = useState(false);
   const [isViewModal, setIsViewModal] = useState(false);
   const [modalData, setModalData] = useState();
   const [viewModalData, setViewModalData] = useState();
@@ -43,7 +43,6 @@ const CarList = () => {
   };
 
   const handleConfirm = async () => {
-    
     const res = await axiosInstance.patch(`/cars/${modalData}`, {
       status: 'approve',
     });
@@ -54,7 +53,6 @@ const CarList = () => {
   };
 
   const handleConfirmSold = async () => {
-    
     const res = await axiosInstance.patch(`/cars/${modalData}`, {
       status: 'sold',
     });
@@ -113,16 +111,14 @@ const CarList = () => {
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Brand</p>
         </div>
-        <div className="col-span-1 hidden items-center sm:flex">
-          <p className="font-medium">Registration</p>
-        </div>
+
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Price</p>
         </div>
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Posted By</p>
         </div>
-        
+
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Status</p>
         </div>
@@ -142,20 +138,16 @@ const CarList = () => {
           <div className="col-span-1 hidden items-center sm:flex">
             <p className="text-sm text-black dark:text-white">{item.brand}</p>
           </div>
-          <div className="col-span-1 flex items-center">
-            <p className="text-sm text-black dark:text-white">
-              {item.registration_year}
-            </p>
-          </div>
+
           <div className="col-span-1 flex items-center">
             <p className="text-sm text-black dark:text-white">{item.price}</p>
           </div>
           <div className="col-span-1 flex items-center">
             <p className="text-sm text-black dark:text-white">
-              {item.userid.name}
+              {item.user.name}
             </p>
           </div>
-         
+
           <div className="col-span-1 flex items-center">
             <p
               className={`text-sm font-semibold dark:text-white ${
@@ -185,12 +177,14 @@ const CarList = () => {
             >
               <TiEyeOutline />
             </p>
-            {item?.status === 'approve' && <p
-              className="text-3xl text-meta-1 cursor-pointer"
-              onClick={() => handleSold(item._id)}
-            >
-              <IoCheckmarkDoneCircle />
-            </p>}
+            {item?.status === 'approve' && (
+              <p
+                className="text-3xl text-meta-1 cursor-pointer"
+                onClick={() => handleSold(item._id)}
+              >
+                <IoCheckmarkDoneCircle />
+              </p>
+            )}
           </div>
         </div>
       ))}

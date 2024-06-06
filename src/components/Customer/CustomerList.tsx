@@ -5,7 +5,6 @@ import { SearchFilter } from '../SearchFilter/SearchFilter';
 import { Link } from 'react-router-dom';
 import { ImBlocked } from 'react-icons/im';
 import ConfirmModal from '../Modal/ConfirmModal';
-import { TiEyeOutline } from 'react-icons/ti';
 import { FaCheck } from 'react-icons/fa';
 import { FaPenToSquare } from 'react-icons/fa6';
 
@@ -16,48 +15,29 @@ const CustomerList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [entriesPerPage, setEntriesPerPage] = useState(10);
 
-  const [isConfirmModal, setIsConfirmModal] = useState(false);
-  const [isApproveModal, setIsApproveModal] = useState(false);
-  const [modalData, setModalData] = useState();
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    type: null, // 'block' or 'approve'
+    userId: null,
+  });
+
   const closeModal = () => {
-    setIsConfirmModal(false);
+    setConfirmModal({ ...confirmModal, isOpen: false });
   };
-  const openModal = () => {
-    setIsConfirmModal(true);
+
+  const openModal = (type, userId) => {
+    setConfirmModal({ isOpen: true, type, userId });
   };
 
   const handleConfirm = async () => {
-    const res = await axiosInstance.patch(`/users/${modalData}`, {
-      status: 'block',
+    const status = confirmModal.type === 'block' ? 'block' : 'active';
+    const res = await axiosInstance.patch(`/users/${confirmModal.userId}`, {
+      status,
     });
     if (res.data.success) {
       fetchData(currentPage, entriesPerPage, searchTerm);
     }
-    setIsConfirmModal(false); // Close the modal after confirmation
-  };
-
-  const handleStatus = (id) => {
-    openModal();
-    setModalData(id);
-  };
-
-  const handleApprove = (id) => {
-    setModalData(id);
-    setIsApproveModal(true)
-  };
-
-  const closeApprove = () => {
-    setIsApproveModal(true)
-  };
-
-  const handleApproveConfirm = async () => {
-    const res = await axiosInstance.patch(`/users/${modalData}`, {
-      status: 'active',
-    });
-    if (res.data.success) {
-      fetchData(currentPage, entriesPerPage, searchTerm);
-    }
-    setIsApproveModal(false); // Close the modal after confirmation
+    closeModal();
   };
 
   const fetchData = async (page, entriesPerPage, searchTerm = '') => {
@@ -146,21 +126,21 @@ const CustomerList = () => {
           </div>
           <div className="col-span-1 flex items-center space-x-2">
             <p className="text-sm text-meta-3">
-              <Link to={`/dashboard/customer/${item._id}`}>
+              <Link to={`/dashboard/customer/${item.id}`}>
                 <FaPenToSquare />
               </Link>
             </p>
             {item?.status === 'active' ? (
               <p
                 className="text-lg text-danger cursor-pointer"
-                onClick={() => handleStatus(item._id)}
+                onClick={() => openModal('block', item?.id)}
               >
                 <ImBlocked />
               </p>
             ) : (
               <p
                 className="text-lg text-blue-500 cursor-pointer"
-                onClick={() => handleApprove(item._id)}
+                onClick={() => openModal('approve', item?.id)}
               >
                 <FaCheck />
               </p>
@@ -175,18 +155,15 @@ const CustomerList = () => {
         onPageChange={handlePageChange}
       />
       <ConfirmModal
-        isOpen={isConfirmModal}
-        title="Confirm Block User"
-        message="Are you sure you want to block this user?"
+        isOpen={confirmModal.isOpen}
+        title={`Confirm ${
+          confirmModal.type === 'block' ? 'Block' : 'Approve'
+        } User`}
+        message={`Are you sure you want to ${
+          confirmModal.type === 'block' ? 'block' : 'approve'
+        } this user?`}
         onCancel={closeModal}
         onConfirm={handleConfirm}
-      />
-      <ConfirmModal
-        isOpen={isApproveModal}
-        title="Confirm Active User"
-        message="Are you sure you want to Active this user?"
-        onCancel={closeApprove}
-        onConfirm={handleApproveConfirm}
       />
     </div>
   );

@@ -13,8 +13,10 @@ import { useSelector } from 'react-redux';
 import CloudinaryUploadWidget from '../CloudinaryUploadWidget';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage, responsive, placeholder } from '@cloudinary/react';
+import { useNavigate } from 'react-router-dom';
 
 const CarCreateForm = () => {
+  const navigate = useNavigate();
   const [publicIds, setPublicIds] = useState([]);
 
   // Replace with your own cloud name and upload preset
@@ -68,7 +70,7 @@ const CarCreateForm = () => {
       const brand = data.brand.value;
       const condition = data.condition.value;
       const transmition = data.transmition.value;
-      const userid = user?._id;
+      const user_id = user?.id;
       const gallery = publicIds;
 
       const formData = {
@@ -79,15 +81,16 @@ const CarCreateForm = () => {
         brand,
         condition,
         transmition,
-        userid,
+        user_id,
         gallery,
       };
 
       const response = await axiosInstance.post('/cars', formData);
 
       if (response.data.success) {
-        toast.success('Car Posted successfully');
         reset();
+        navigate('/dashboard/car');
+        toast.success('Car Posted successfully');
       }
     } catch (error) {
       console.error('Error:', error);

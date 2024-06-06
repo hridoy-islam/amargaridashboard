@@ -87,7 +87,7 @@ const CustomerEditForm = ({ userData }) => {
                   <span>Please insert correct phone number</span>
                 )}
               </div>
-              <div>
+              {/* <div>
                 <label className="mb-3 block text-black dark:text-white">
                   Password
                 </label>
@@ -98,7 +98,7 @@ const CustomerEditForm = ({ userData }) => {
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
                 {errors.password && <span>Password minimum 4 characters</span>}
-              </div>
+              </div> */}
               <div>
                 <input
                   type="submit"

@@ -14,8 +14,8 @@ const BookingCreateForm = () => {
   } = useForm();
   const onSubmit = async (data) => {
     try {
-      const userid = data.userid.value;
-      const modifiedFormData = { ...data, userid };
+      const user_id = data.userid.value;
+      const modifiedFormData = { ...data, user_id };
       const response = await axiosInstance.post('/booking', modifiedFormData);
 
       if (response.data.success) {
@@ -29,7 +29,9 @@ const BookingCreateForm = () => {
   };
 
   const fetchData = async () => {
-    const res = await axiosInstance.get('/users');
+    const res = await axiosInstance.get(
+      '/users?status=active&role=user&limit=all&select=id,name',
+    );
     setUsers(res.data.data.result);
   };
   useEffect(() => {
@@ -117,7 +119,7 @@ const BookingCreateForm = () => {
                     <ReactSelect
                       {...field}
                       options={users.map((user) => ({
-                        value: user._id,
+                        value: user.id,
                         label: user.name,
                       }))}
                       classNamePrefix="react-select"
