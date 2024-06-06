@@ -56,6 +56,8 @@ const ViewModal = ({ isOpen, title, data, onCancel, type }) => {
 
 export default ViewModal;
 const RenderCar = ({ data }) => {
+  const fuelTypeArray = data?.fuelType ? JSON.parse(data.fuelType) : [];
+  const galleryArray = data?.gallery ? JSON.parse(data.gallery) : [];
   return (
     <div className="mb-6">
       <div className="grid grid-cols-2 gap-4">
@@ -120,8 +122,8 @@ const RenderCar = ({ data }) => {
         </div>
 
         <div className="mb-1">
-          <span className="font-semibold">Status</span>:{' '}
-          {data?.fuelType.map((item, index) => (
+          <span className="font-semibold">Fuel Type</span>:{' '}
+          {fuelTypeArray.map((item, index) => (
             <span className="text-md mx-1" key={index}>
               {item.label}
             </span>
@@ -133,7 +135,7 @@ const RenderCar = ({ data }) => {
         <div className="mb-1">
           <span className="font-semibold">Gallery</span>
           <span className="flex">
-            {data?.gallery?.map((item, index) => (
+            {galleryArray?.map((item, index) => (
               <img
                 key={index}
                 src={`https://res.cloudinary.com/dneodtbad/image/upload/${item}`}

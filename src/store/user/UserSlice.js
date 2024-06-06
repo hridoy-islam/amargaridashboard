@@ -4,14 +4,24 @@ import { jwtDecode } from 'jwt-decode';
 
 export const loginUser = createAsyncThunk(
   'auth/login',
-  async (userCredentials) => {
-    const request = await axios.post(
-      `${import.meta.env.VITE_API_URL}/login`,
-      userCredentials,
-    );
-    const response = await request.data;
-    localStorage.setItem('garirmela', JSON.stringify(response));
-    return response;
+  async (userCredentials, { rejectWithValue }) => {
+    try {
+      const request = await axios.post(
+        `${import.meta.env.VITE_API_URL}/login`,
+        userCredentials,
+      );
+      const response = await request.data;
+
+      // Check if the user's role is 'admin'
+      if (response.user.role === 'admin') {
+        localStorage.setItem('garirmela', JSON.stringify(response));
+        return response;
+      } else {
+        return rejectWithValue('Please check Credentials');
+      }
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   },
 );
 

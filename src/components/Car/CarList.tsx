@@ -14,25 +14,8 @@ const CarList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [entriesPerPage, setEntriesPerPage] = useState(10);
 
-  const [isConfirmModal, setIsConfirmModal] = useState(false);
-  const [isSoldModal, setIsSoldModal] = useState(false);
   const [isViewModal, setIsViewModal] = useState(false);
-  const [modalData, setModalData] = useState();
   const [viewModalData, setViewModalData] = useState();
-
-  const openModal = () => {
-    setIsConfirmModal(true);
-  };
-  const closeModal = () => {
-    setIsConfirmModal(false);
-  };
-  const closeModalSold = () => {
-    setIsSoldModal(false);
-  };
-
-  const handleSold = () => {
-    setIsSoldModal(true);
-  };
 
   const handleViewModal = (item) => {
     setViewModalData(item);
@@ -40,26 +23,6 @@ const CarList = () => {
   };
   const closeViewModal = () => {
     setIsViewModal(false);
-  };
-
-  const handleConfirm = async () => {
-    const res = await axiosInstance.patch(`/cars/${modalData}`, {
-      status: 'approve',
-    });
-    if (res.data.success) {
-      fetchData(currentPage, entriesPerPage, searchTerm);
-    }
-    setIsConfirmModal(false); // Close the modal after confirmation
-  };
-
-  const handleConfirmSold = async () => {
-    const res = await axiosInstance.patch(`/cars/${modalData}`, {
-      status: 'sold',
-    });
-    if (res.data.success) {
-      fetchData(currentPage, entriesPerPage, searchTerm);
-    }
-    setIsSoldModal(false); // Close the modal after confirmation
   };
 
   const fetchData = async (page, entriesPerPage, searchTerm = '') => {
@@ -93,9 +56,52 @@ const CarList = () => {
     setEntriesPerPage(event.target.value);
   };
 
-  const handleStatus = (id) => {
-    openModal();
-    setModalData(id);
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    type: null, // 'pending', 'approve', or 'sold'
+    carId: null,
+  });
+
+  const openConfirmModal = (type, carId) => {
+    setConfirmModal({ isOpen: true, type, carId });
+  };
+
+  const closeConfirmModal = () => {
+    setConfirmModal({ ...confirmModal, isOpen: false });
+  };
+
+  const handleConfirm = async () => {
+    let newStatus = '';
+    switch (confirmModal.type) {
+      case 'pending':
+        newStatus = 'pending';
+        break;
+      case 'approve':
+        newStatus = 'approve';
+        break;
+      case 'sold':
+        newStatus = 'sold';
+        break;
+      default:
+        return; // No action if the type is not recognized
+    }
+
+    const res = await axiosInstance.patch(`/cars/${confirmModal.carId}`, {
+      status: newStatus,
+    });
+
+    console.log(res);
+
+    if (res.data.success) {
+      fetchData(currentPage, entriesPerPage, searchTerm);
+    }
+    closeConfirmModal();
+  };
+
+  // ... existing fetchData, useEffect, handlePageChange, handleSearch, handleEntriesPerPageChange functions
+
+  const handleStatus = (type, carId) => {
+    openConfirmModal(type, carId);
   };
 
   return (
@@ -164,12 +170,29 @@ const CarList = () => {
             </p>
           </div>
           <div className="col-span-1 flex items-center space-x-2">
-            <p
-              className="text-3xl text-meta-3 cursor-pointer"
-              onClick={() => handleStatus(item._id)}
-            >
-              <TiTick />
-            </p>
+            {item?.status == 'pending' && (
+              <button
+                className="bg-blue-500 text-white p-1.5"
+                onClick={() => handleStatus('approve', item?.id)}
+              >
+                Approve Car
+              </button>
+            )}
+
+            {item?.status == 'approve' && (
+              <button
+                className="bg-red-500 text-white p-1"
+                onClick={() => handleStatus('sold', item?.id)}
+              >
+                Sold Car
+              </button>
+            )}
+
+            {item?.status == 'sold' && (
+              <button className="bg-green-600 text-white p-1">
+                Already Sold
+              </button>
+            )}
 
             <p
               className="text-3xl text-meta-5 cursor-pointer"
@@ -177,14 +200,6 @@ const CarList = () => {
             >
               <TiEyeOutline />
             </p>
-            {item?.status === 'approve' && (
-              <p
-                className="text-3xl text-meta-1 cursor-pointer"
-                onClick={() => handleSold(item._id)}
-              >
-                <IoCheckmarkDoneCircle />
-              </p>
-            )}
           </div>
         </div>
       ))}
@@ -195,18 +210,23 @@ const CarList = () => {
         onPageChange={handlePageChange}
       />
       <ConfirmModal
-        isOpen={isConfirmModal}
-        title="Approve Car"
-        message="Are you sure you want to approve this car listing?"
-        onCancel={closeModal}
+        isOpen={confirmModal.isOpen}
+        title={`Confirm ${
+          confirmModal.type === 'block'
+            ? 'Block'
+            : confirmModal.type === 'approve'
+            ? 'Approve'
+            : 'Sold'
+        } Car`}
+        message={`Are you sure you want to ${
+          confirmModal.type === 'block'
+            ? 'block'
+            : confirmModal.type === 'approve'
+            ? 'approve'
+            : 'mark as sold'
+        } this car listing?`}
+        onCancel={closeConfirmModal}
         onConfirm={handleConfirm}
-      />
-      <ConfirmModal
-        isOpen={isSoldModal}
-        title="Confirm Sold"
-        message="Are you sure is this car sold?"
-        onCancel={closeModalSold}
-        onConfirm={handleConfirmSold}
       />
 
       <ViewModal
