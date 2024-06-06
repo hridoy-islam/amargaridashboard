@@ -25,6 +25,10 @@ const CarList = () => {
     setIsViewModal(false);
   };
 
+  const closeViewModal = () => {
+    setIsViewModal(false);
+  };
+
   const fetchData = async (page, entriesPerPage, searchTerm = '') => {
     try {
       let url = `/cars?page=${page}&limit=${entriesPerPage}`;
@@ -59,6 +63,7 @@ const CarList = () => {
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
     type: null, // 'pending', 'approve', or 'sold'
+    type: null, // 'pending', 'approve', or 'sold'
     carId: null,
   });
 
@@ -73,6 +78,8 @@ const CarList = () => {
   const handleConfirm = async () => {
     let newStatus = '';
     switch (confirmModal.type) {
+      case 'pending':
+        newStatus = 'pending';
       case 'pending':
         newStatus = 'pending';
         break;
@@ -170,29 +177,15 @@ const CarList = () => {
             </p>
           </div>
           <div className="col-span-1 flex items-center space-x-2">
-            {item?.status == 'pending' && (
-              <button
-                className="bg-blue-500 text-white p-1.5"
-                onClick={() => handleStatus('approve', item?.id)}
-              >
-                Approve Car
-              </button>
-            )}
-
-            {item?.status == 'approve' && (
-              <button
-                className="bg-red-500 text-white p-1"
-                onClick={() => handleStatus('sold', item?.id)}
-              >
-                Sold Car
-              </button>
-            )}
-
-            {item?.status == 'sold' && (
-              <button className="bg-green-600 text-white p-1">
-                Already Sold
-              </button>
-            )}
+            <button onClick={() => handleStatus('block', item?.id)}>
+              Block Car
+            </button>
+            <button onClick={() => handleStatus('approve', item?.id)}>
+              Approve Car
+            </button>
+            <button onClick={() => handleStatus('sold', item?.id)}>
+              Mark as Sold
+            </button>
 
             <p
               className="text-3xl text-meta-5 cursor-pointer"
@@ -212,15 +205,15 @@ const CarList = () => {
       <ConfirmModal
         isOpen={confirmModal.isOpen}
         title={`Confirm ${
-          confirmModal.type === 'block'
-            ? 'Block'
+          confirmModal.type === 'pending'
+            ? 'Pending'
             : confirmModal.type === 'approve'
             ? 'Approve'
             : 'Sold'
         } Car`}
         message={`Are you sure you want to ${
-          confirmModal.type === 'block'
-            ? 'block'
+          confirmModal.type === 'pending'
+            ? 'pending'
             : confirmModal.type === 'approve'
             ? 'approve'
             : 'mark as sold'
@@ -232,8 +225,10 @@ const CarList = () => {
       <ViewModal
         isOpen={isViewModal}
         title="Car Details"
+        title="Car Details"
         data={viewModalData}
         onCancel={closeViewModal}
+        type="car"
         type="car"
       />
     </div>
