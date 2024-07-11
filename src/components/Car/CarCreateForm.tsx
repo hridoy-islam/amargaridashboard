@@ -161,7 +161,6 @@ const CarCreateForm = () => {
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
               </div>
-
               <div>
                 <label className="mb-3 block text-black dark:text-white">
                   Car Brand
@@ -195,7 +194,6 @@ const CarCreateForm = () => {
                 />
                 {errors.brand && <span>This field is required</span>}
               </div>
-
               <div>
                 <label className="mb-3 block text-black dark:text-white">
                   Color
@@ -208,7 +206,6 @@ const CarCreateForm = () => {
                 />
                 {errors.color && <span>This field is required</span>}
               </div>
-
               <div>
                 <label className="mb-3 block text-black dark:text-white">
                   Model
@@ -225,7 +222,7 @@ const CarCreateForm = () => {
                   Registration Year
                 </label>
                 <input
-                  {...register('registration_year', { required: true })}
+                  {...register('registration_year')}
                   placeholder="Registration Year"
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
@@ -233,7 +230,7 @@ const CarCreateForm = () => {
                   <span>This field is required</span>
                 )}
               </div>
-              <div>
+              {/* <div>
                 <label className="mb-3 block text-black dark:text-white">
                   Production Year
                 </label>
@@ -243,7 +240,7 @@ const CarCreateForm = () => {
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
                 {errors.production_year && <span>This field is required</span>}
-              </div>
+              </div> */}
               <div>
                 <label className="mb-3 block text-black dark:text-white">
                   Price
